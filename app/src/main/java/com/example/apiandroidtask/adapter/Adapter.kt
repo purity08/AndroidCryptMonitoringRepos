@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apiandroidtask.Model
 import com.example.apiandroidtask.R
+import com.example.apiandroidtask.retrofit.Data
 import com.squareup.picasso.Picasso
 
 class Adapter(
@@ -27,11 +28,11 @@ class Adapter(
         }
 
         override fun onClick(v: View?) {
-            listener.onItemClick(adapterPosition)
+            listener.onItemClick(adapterPosition,v)
         }
     }
     interface OnItemClickListener{
-        fun onItemClick(position: Int)
+        fun onItemClick(position: Int,v: View?)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
