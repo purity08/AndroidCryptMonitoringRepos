@@ -5,13 +5,114 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AdditionalInfoActivity">
-   <TextView
-       android:id="@+id/textView"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintLeft_toLeftOf="parent"
-       app:layout_constraintRight_toRightOf="parent"
-       />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/cryptImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/cryptNameView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cryptNameView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/dateView"
+            app:layout_constraintLeft_toRightOf="@+id/cryptImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dateView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/cryptNameView"
+            app:layout_constraintTop_toBottomOf="@+id/cryptNameView" />
+
+        <TextView
+            android:id="@+id/staticHighPriceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HIGH:"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/staticLowPriceView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dateView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/staticLowPriceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOW :"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/staticHighPriceView"
+            app:layout_constraintTop_toBottomOf="@+id/staticHighPriceView" />
+
+        <TextView
+            android:id="@+id/highPriceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/staticHighPriceView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/staticHighPriceView"
+            app:layout_constraintTop_toTopOf="@id/staticHighPriceView" />
+
+        <TextView
+            android:id="@+id/lowPriceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/staticLowPriceView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/staticHighPriceView"
+            app:layout_constraintTop_toTopOf="@id/staticLowPriceView" />
+
+        <TextView
+            android:id="@+id/staticAvgView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AVG  :"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/staticLowPriceView"
+            app:layout_constraintStart_toStartOf="@+id/staticLowPriceView"
+            app:layout_constraintTop_toBottomOf="@id/staticLowPriceView" />
+
+        <TextView
+            android:id="@+id/avgPriceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/lowPriceView"
+            app:layout_constraintTop_toBottomOf="@id/lowPriceView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph"
+        android:layout_width="wrap_content"
+        android:layout_height="450dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

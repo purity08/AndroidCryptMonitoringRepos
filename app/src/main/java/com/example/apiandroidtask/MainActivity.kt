@@ -1,11 +1,9 @@
 package com.example.apiandroidtask
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,8 +41,7 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val retrofitService: RetrofitServices
-        retrofitService = retrofit.create(RetrofitServices::class.java)
+        val retrofitService = retrofit.create(RetrofitServices::class.java)
 
         crypt = retrofitService.getAssets()
         crypt.enqueue(object : Callback<Cryptocurrencies> {
@@ -69,7 +66,7 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                         )
                     }
                 }
-                recyclerView.adapter = Adapter(baseContext, namesList,this@MainActivity)
+                recyclerView.adapter = Adapter(baseContext, namesList, this@MainActivity)
             }
 
             override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {}
@@ -82,9 +79,17 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
         val clickedItem = namesList[position]
         //v?.setBackgroundColor(Color.GRAY)
         Singleton.id = clickedItem.id.toString()
-        startActivity(Intent(this,AdditionalInfoActivity::class.java))
+        Singleton.name = clickedItem.name.toString()
+        Singleton.symbol = clickedItem.symbol.toString()
+
+        startActivity(Intent(this, AdditionalInfoActivity::class.java))
+//        Handler().postDelayed({
+//            startActivity(Intent(this,AdditionalInfoActivity::class.java))
+//        }, SPLASH_TIME_OUT)
+
         //Toast.makeText(this, "${clickedItem.name}", Toast.LENGTH_SHORT).show()
     }
+
 
 }
 

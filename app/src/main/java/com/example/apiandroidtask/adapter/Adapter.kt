@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apiandroidtask.Model
 import com.example.apiandroidtask.R
-import com.example.apiandroidtask.retrofit.Data
 import com.squareup.picasso.Picasso
 
 class Adapter(
@@ -18,21 +17,23 @@ class Adapter(
     private val list: ArrayList<Model>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<Adapter.ViewHolder>() {
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view),View.OnClickListener {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val name: TextView = view.findViewById(R.id.nameView)
         val priceUsd: TextView = view.findViewById(R.id.priceView)
         val changePercent24Hr: TextView = view.findViewById(R.id.changeView)
         val symbol: ImageView = view.findViewById(R.id.imageView)
+
         init {
             itemView.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
-            listener.onItemClick(adapterPosition,v)
+            listener.onItemClick(adapterPosition, v)
         }
     }
-    interface OnItemClickListener{
-        fun onItemClick(position: Int,v: View?)
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int, v: View?)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
