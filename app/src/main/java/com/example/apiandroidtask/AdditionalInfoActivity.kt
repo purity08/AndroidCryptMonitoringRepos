@@ -12,6 +12,7 @@ import com.example.apiandroidtask.retrofit.Model.IntervalData
 import com.example.apiandroidtask.retrofit.RetrofitServices
 import com.example.apiandroidtask.singleton.Singleton
 import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.helper.StaticLabelsFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.squareup.picasso.Picasso
@@ -41,6 +42,8 @@ class AdditionalInfoActivity : AppCompatActivity() {
         val end = System.currentTimeMillis()
         val start = end - ONE_DAY_IN_MILS
 
+
+
         crypt = retrofitService.get24hCryptInfo(Singleton.id, start, end)
         crypt.enqueue(object : Callback<CryptData> {
 
@@ -51,15 +54,35 @@ class AdditionalInfoActivity : AppCompatActivity() {
                 val priceList: List<IntervalData>? = response.body()?.data
                 if (priceList != null) {
                     val graph = findViewById<GraphView>(R.id.graph)
-//                    val stf = StaticLabelsFormatter(graph)
 
-                    val a: Array<DataPoint?> = arrayOfNulls(23)
+                    val pricesArrayList = arrayListOf<DataPoint>()
+
                     for ((index, crypt) in priceList.withIndex()) {
-                        a[index] = DataPoint(index.toDouble(), crypt.priceUsd!!.toDouble())
+                        pricesArrayList.add(
+                            DataPoint(
+                                index.toDouble(),
+                                crypt.priceUsd!!.toDouble()
+                            )
+                        )
                     }
-                    val series = LineGraphSeries(a)
+                    val formate = SimpleDateFormat("HH aa")
+
+                    var l = priceList[0].time?.toLong()!!
+
+                    val dateArrayList = arrayListOf<String>()
+                    for (i in 0..7) {
+                        dateArrayList.add(formate.format(l).replace(" ", ""))
+                        l += 12340800
+                        Log.d("L: ", dateArrayList[i])
+                    }
+                    val series = LineGraphSeries(pricesArrayList.toTypedArray())
                     graph.addSeries(series)
-                    graph.gridLabelRenderer.numHorizontalLabels = 13
+
+                    val staticLablesFormatter = StaticLabelsFormatter(graph)
+                    staticLablesFormatter.setHorizontalLabels(dateArrayList.toTypedArray())
+
+                    graph.gridLabelRenderer.labelFormatter = staticLablesFormatter
+                    graph.gridLabelRenderer.textSize = 30F
                     graph.visibility = View.VISIBLE
 
                     val highPrice = series.highestValueY
@@ -74,15 +97,10 @@ class AdditionalInfoActivity : AppCompatActivity() {
 
                     val avgPriceView = findViewById<TextView>(R.id.avgPriceView)
                     avgPriceView.text = "$${String.format("%.2f", avgPrice)}"
-//                    stf.setHorizontalLabels(arrayOf("h1", "h2", "h3"))
-//                    stf.setVerticalLabels(arrayOf("v1", "v2", "v3"))
-//                    graph.gridLabelRenderer.labelFormatter = stf
                 }
             }
 
-            override fun onFailure(call: Call<CryptData>, t: Throwable) {
-                Log.d("______FAIL_______", t.message.toString())
-            }
+            override fun onFailure(call: Call<CryptData>, t: Throwable) {}
         })
 
         val dateView = findViewById<TextView>(R.id.dateView)
