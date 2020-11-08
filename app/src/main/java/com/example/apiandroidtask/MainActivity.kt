@@ -91,13 +91,10 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
             v.isClickable = false
         }
         startActivity(Intent(this, AdditionalInfoActivity::class.java))
-        if (v != null) {
-            v.isClickable = true
-        }
     }
 
     /**
-     * Timer for updating
+     * Timer for auto updating over 7sec
      */
     private fun setValues(timer: Timer): Timer {
         timer.scheduleAtFixedRate(object : TimerTask() {
@@ -135,7 +132,7 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                 })
                 runOnUiThread { Toast.makeText(baseContext, "Data has been updated!", Toast.LENGTH_SHORT).show() }
             }
-        }, 0, 7000)
+        }, 1000, 7000)
         return timer
     }
 

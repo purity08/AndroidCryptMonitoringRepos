@@ -63,13 +63,13 @@ class AdditionalInfoActivity : AppCompatActivity() {
                             )
                         )
                     }
-                    val formate = SimpleDateFormat("HH aa")
+                    val formate = SimpleDateFormat("HH")
 
                     var l = priceList[0].time?.toLong()!!
 
                     val dateArrayList = arrayListOf<String>()
                     for (i in 0..7) {
-                        dateArrayList.add(formate.format(l).replace(" ", ""))
+                        dateArrayList.add(formate.format(l).replace(" ", "") + ":00")
                         l += 12340800
                         Log.d("L: ", dateArrayList[i])
                     }
@@ -80,7 +80,7 @@ class AdditionalInfoActivity : AppCompatActivity() {
                     staticLablesFormatter.setHorizontalLabels(dateArrayList.toTypedArray())
 
                     graph.gridLabelRenderer.labelFormatter = staticLablesFormatter
-                    graph.gridLabelRenderer.textSize = 30F
+                    graph.gridLabelRenderer.textSize = 20F
                     graph.visibility = View.VISIBLE
 
                     val highPrice = series.highestValueY
