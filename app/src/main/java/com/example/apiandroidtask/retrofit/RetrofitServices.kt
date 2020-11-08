@@ -11,9 +11,6 @@ interface RetrofitServices {
     @GET("assets")
     fun getAssets(): Call<Cryptocurrencies>
 
-    @GET("assets/{id}/history?interval=h1")
-    fun getCryptInfo(@Path("id") s: String): Call<CryptData>
-
     @GET("assets/{id}/history?interval=m1")
     fun get24hCryptInfo(
         @Path("id") id: String,

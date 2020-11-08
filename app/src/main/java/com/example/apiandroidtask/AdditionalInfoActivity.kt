@@ -42,8 +42,6 @@ class AdditionalInfoActivity : AppCompatActivity() {
         val end = System.currentTimeMillis()
         val start = end - ONE_DAY_IN_MILS
 
-
-
         crypt = retrofitService.get24hCryptInfo(Singleton.id, start, end)
         crypt.enqueue(object : Callback<CryptData> {
 
