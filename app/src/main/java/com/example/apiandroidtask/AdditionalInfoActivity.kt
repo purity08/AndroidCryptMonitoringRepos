@@ -90,13 +90,13 @@ class AdditionalInfoActivity : AppCompatActivity() {
                     val avgPrice = (highPrice + lowPrice) / 2
 
                     val highPriceView = findViewById<TextView>(R.id.highPriceView)
-                    highPriceView.text = "$${String.format("%.2f", highPrice)}"
+                    highPriceView.text = "$${String.format("%.4f", highPrice)}"
 
                     val lowPriceView = findViewById<TextView>(R.id.lowPriceView)
-                    lowPriceView.text = "$${String.format("%.2f", lowPrice)}"
+                    lowPriceView.text = "$${String.format("%.4f", lowPrice)}"
 
                     val avgPriceView = findViewById<TextView>(R.id.avgPriceView)
-                    avgPriceView.text = "$${String.format("%.2f", avgPrice)}"
+                    avgPriceView.text = "$${String.format("%.4f", avgPrice)}"
                 }
             }
 

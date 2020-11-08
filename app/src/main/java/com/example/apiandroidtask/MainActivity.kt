@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,6 +20,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+
 
 const val BASE_URL = "https://api.coincap.io/v2/"
 
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
     private fun setValues(timer: Timer): Timer {
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                runOnUiThread { Log.d("QWEQWR","1")}
+                runOnUiThread { Log.d("QWEQWR", "1") }
             }
         }, 0, 3500)
         return timer

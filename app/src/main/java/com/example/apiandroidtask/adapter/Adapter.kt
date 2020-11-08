@@ -44,7 +44,7 @@ class Adapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = list[position]
 
-        val price: String = String.format("%.3f", data.priceUsd?.toFloat())
+        val price: String = String.format("%.4f", data.priceUsd?.toFloat())
         val change: String = String.format("%.2f", data.changePercent24Hr?.toFloat())
 
         if (change.startsWith("-"))
