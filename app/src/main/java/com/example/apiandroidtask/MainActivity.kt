@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
     private val namesList = arrayListOf<Model>()
     lateinit var globalTimer: Timer
     private lateinit var retrofit: Retrofit
+    private var netIsWorking: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +76,8 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                 }
                 recyclerView.adapter = Adapter(baseContext, namesList, this@MainActivity)
             }
-            override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {Log.d("FAIL__",t.message.toString())}
+            override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {
+                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()}
         })
         recyclerView.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
 
@@ -111,6 +113,9 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                             return
                         }
                         val posts: List<Data>? = response.body()?.data
+                        if (namesList.isEmpty()){
+                            netIsWorking = true
+                        }
                         namesList.clear()
                         if (posts != null) {
                             for (crypt in posts) {
@@ -126,13 +131,26 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                             }
                         }
                         recyclerView.adapter?.notifyDataSetChanged()
+                        if (netIsWorking) {
+                            recyclerView.adapter = Adapter(baseContext, namesList, this@MainActivity)
+                        }
                     }
 
-                    override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {}
+                    override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {
+                        netIsWorking = false
+                        Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_SHORT).show()
+                        return
+                    }
                 })
-                runOnUiThread { Toast.makeText(baseContext, "Data has been updated!", Toast.LENGTH_SHORT).show() }
+                runOnUiThread {
+                    Toast.makeText(
+                        baseContext,
+                        "Data has been updated!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-        }, 1000, 7000)
+        }, 2000, 7000)
         return timer
     }
 

@@ -2,10 +2,10 @@ package com.example.apiandroidtask
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.apiandroidtask.retrofit.Model.CryptData
 import com.example.apiandroidtask.retrofit.Model.IntervalData
@@ -69,9 +69,8 @@ class AdditionalInfoActivity : AppCompatActivity() {
 
                     val dateArrayList = arrayListOf<String>()
                     for (i in 0..7) {
-                        dateArrayList.add(formate.format(l).replace(" ", "") + ":00")
+                        dateArrayList.add(formate.format(l) + ":00")
                         l += 12340800
-                        Log.d("L: ", dateArrayList[i])
                     }
                     val series = LineGraphSeries(pricesArrayList.toTypedArray())
                     graph.addSeries(series)
@@ -98,7 +97,8 @@ class AdditionalInfoActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<CryptData>, t: Throwable) {}
+            override fun onFailure(call: Call<CryptData>, t: Throwable) {
+                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()}
         })
 
         val dateView = findViewById<TextView>(R.id.dateView)
