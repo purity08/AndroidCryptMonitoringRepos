@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apiandroidtask.Model
 import com.example.apiandroidtask.R
@@ -18,10 +19,12 @@ class Adapter(
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<Adapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
-        val name: TextView = view.findViewById(R.id.nameView)
+        val name: TextView = view.findViewById(R.id.idView)
+        val id: TextView = view.findViewById(R.id.nameView)
         val priceUsd: TextView = view.findViewById(R.id.priceView)
         val changePercent24Hr: TextView = view.findViewById(R.id.changeView)
         val symbol: ImageView = view.findViewById(R.id.imageView)
+        val recyclerView: ConstraintLayout = view.findViewById(R.id.cryptConstraint)
 
         init {
             itemView.setOnClickListener(this)
@@ -47,18 +50,26 @@ class Adapter(
         val price: String = String.format("%.4f", data.priceUsd?.toFloat())
         val change: String = String.format("%.2f", data.changePercent24Hr?.toFloat())
 
-        if (change.startsWith("-"))
+        if (change.startsWith("-")) {
             holder.changePercent24Hr.setTextColor(Color.RED)
-        else
+            holder.changePercent24Hr.text = "${change}%"
+        } else {
             holder.changePercent24Hr.setTextColor(Color.GREEN)
+            holder.changePercent24Hr.text = "+${change}%"
+        }
 
         holder.name.text = data.name
         holder.priceUsd.text = "$${price}"
-        holder.changePercent24Hr.text = "${change}%"
+        holder.id.text = data.symbol
 
+        if (position % 2 != 0) {
+            holder.recyclerView.setBackgroundColor(Color.parseColor("#1e2126"))
+        } else {
+            holder.recyclerView.setBackgroundColor(Color.parseColor("#161a1d"))
+        }
         Picasso.get()
             .load("https://static.coincap.io/assets/icons/${data.symbol?.toLowerCase()}@2x.png")
-            .placeholder(R.color.white)
+            .noPlaceholder()
             .error(R.drawable.ic_launcher_foreground)
             .fit()
             .into(holder.symbol)

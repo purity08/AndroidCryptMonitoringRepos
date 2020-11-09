@@ -1,12 +1,14 @@
 package com.example.apiandroidtask
 
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import com.example.apiandroidtask.retrofit.Model.CryptData
 import com.example.apiandroidtask.retrofit.Model.IntervalData
 import com.example.apiandroidtask.retrofit.RetrofitServices
@@ -73,6 +75,8 @@ class AdditionalInfoActivity : AppCompatActivity() {
                         l += 12340800
                     }
                     val series = LineGraphSeries(pricesArrayList.toTypedArray())
+                    series.color = Color.BLUE
+                    graph.background = Color.LTGRAY.toDrawable()
                     graph.addSeries(series)
 
                     val staticLablesFormatter = StaticLabelsFormatter(graph)
@@ -98,7 +102,8 @@ class AdditionalInfoActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<CryptData>, t: Throwable) {
-                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()}
+                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()
+            }
         })
 
         val dateView = findViewById<TextView>(R.id.dateView)
@@ -112,7 +117,7 @@ class AdditionalInfoActivity : AppCompatActivity() {
 
         Picasso.get()
             .load("https://static.coincap.io/assets/icons/${Singleton.symbol?.toLowerCase()}@2x.png")
-            .placeholder(R.color.white)
+            .noPlaceholder()
             .error(R.drawable.ic_launcher_foreground)
             .fit()
             .into(symbolView)

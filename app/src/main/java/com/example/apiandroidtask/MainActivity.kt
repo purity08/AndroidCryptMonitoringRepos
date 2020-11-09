@@ -2,9 +2,7 @@ package com.example.apiandroidtask
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -29,9 +27,8 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
 
     private lateinit var crypt: Call<Cryptocurrencies>
     private lateinit var recyclerView: RecyclerView
-    private lateinit var textView: TextView
     private val namesList = arrayListOf<Model>()
-    lateinit var globalTimer: Timer
+    private lateinit var globalTimer: Timer
     private lateinit var retrofit: Retrofit
     private var netIsWorking: Boolean = false
 
@@ -41,10 +38,9 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
 
 
         recyclerView = findViewById(R.id.recycler)
-        textView = findViewById(R.id.staticNameView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-         retrofit = Retrofit.Builder()
+        retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -76,11 +72,12 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                 }
                 recyclerView.adapter = Adapter(baseContext, namesList, this@MainActivity)
             }
+
             override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {
-                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()}
+                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()
+            }
         })
         recyclerView.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
-
     }
 
     override fun onItemClick(position: Int, v: View?) {
@@ -113,7 +110,7 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                             return
                         }
                         val posts: List<Data>? = response.body()?.data
-                        if (namesList.isEmpty()){
+                        if (namesList.isEmpty()) {
                             netIsWorking = true
                         }
                         namesList.clear()
@@ -132,22 +129,18 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
                         }
                         recyclerView.adapter?.notifyDataSetChanged()
                         if (netIsWorking) {
-                            recyclerView.adapter = Adapter(baseContext, namesList, this@MainActivity)
+                            recyclerView.adapter =
+                                Adapter(baseContext, namesList, this@MainActivity)
                         }
                     }
 
                     override fun onFailure(call: Call<Cryptocurrencies>, t: Throwable) {
                         netIsWorking = false
-                        Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()
                         return
                     }
                 })
                 runOnUiThread {
-                    Toast.makeText(
-                        baseContext,
-                        "Data has been updated!",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }, 2000, 7000)
@@ -157,6 +150,11 @@ class MainActivity : AppCompatActivity(), Adapter.OnItemClickListener {
     override fun onResume() {
         globalTimer = setValues(Timer())
         super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        globalTimer.cancel()
     }
 }
 
