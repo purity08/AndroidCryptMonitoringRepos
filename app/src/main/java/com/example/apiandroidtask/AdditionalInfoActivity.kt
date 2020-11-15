@@ -6,104 +6,80 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.drawable.toDrawable
-import com.example.apiandroidtask.retrofit.Model.CryptData
-import com.example.apiandroidtask.retrofit.Model.IntervalData
-import com.example.apiandroidtask.retrofit.RetrofitServices
+import androidx.lifecycle.ViewModelProviders
+import com.example.apiandroidtask.model.IntervalData
 import com.example.apiandroidtask.singleton.Singleton
+import com.example.apiandroidtask.viewmodelview.MainActivityViewModel
+import com.squareup.picasso.Picasso
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.helper.StaticLabelsFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import com.squareup.picasso.Picasso
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 const val ONE_DAY_IN_MILS = 86400000L
 
 class AdditionalInfoActivity : AppCompatActivity() {
-    private lateinit var crypt: Call<CryptData>
+
+    private lateinit var priceList: ArrayList<IntervalData>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_additional_info)
 
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        val viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
-        val retrofitService = retrofit.create(RetrofitServices::class.java)
+        viewModel.recycler24hListData.observe(this, {
+            priceList = it
+            val graph = findViewById<GraphView>(R.id.graph)
 
-        val end = System.currentTimeMillis()
-        val start = end - ONE_DAY_IN_MILS
+            val pricesArrayList = arrayListOf<DataPoint>()
 
-        crypt = retrofitService.get24hCryptInfo(Singleton.id, start, end)
-        crypt.enqueue(object : Callback<CryptData> {
-
-            override fun onResponse(call: Call<CryptData>, response: Response<CryptData>) {
-                if (!response.isSuccessful) {
-                    return
-                }
-                val priceList: List<IntervalData>? = response.body()?.data
-                if (priceList != null) {
-                    val graph = findViewById<GraphView>(R.id.graph)
-
-                    val pricesArrayList = arrayListOf<DataPoint>()
-
-                    for ((index, crypt) in priceList.withIndex()) {
-                        pricesArrayList.add(
-                            DataPoint(
-                                index.toDouble(),
-                                crypt.priceUsd!!.toDouble()
-                            )
-                        )
-                    }
-                    val formate = SimpleDateFormat("HH")
-
-                    var l = priceList[0].time?.toLong()!!
-
-                    val dateArrayList = arrayListOf<String>()
-                    for (i in 0..7) {
-                        dateArrayList.add(formate.format(l) + ":00")
-                        l += 12340800
-                    }
-                    val series = LineGraphSeries(pricesArrayList.toTypedArray())
-                    series.color = Color.BLUE
-                    graph.background = Color.LTGRAY.toDrawable()
-                    graph.addSeries(series)
-
-                    val staticLablesFormatter = StaticLabelsFormatter(graph)
-                    staticLablesFormatter.setHorizontalLabels(dateArrayList.toTypedArray())
-
-                    graph.gridLabelRenderer.labelFormatter = staticLablesFormatter
-                    graph.gridLabelRenderer.textSize = 20F
-                    graph.visibility = View.VISIBLE
-
-                    val highPrice = series.highestValueY
-                    val lowPrice = series.lowestValueY
-                    val avgPrice = (highPrice + lowPrice) / 2
-
-                    val highPriceView = findViewById<TextView>(R.id.highPriceView)
-                    highPriceView.text = "$${String.format("%.4f", highPrice)}"
-
-                    val lowPriceView = findViewById<TextView>(R.id.lowPriceView)
-                    lowPriceView.text = "$${String.format("%.4f", lowPrice)}"
-
-                    val avgPriceView = findViewById<TextView>(R.id.avgPriceView)
-                    avgPriceView.text = "$${String.format("%.4f", avgPrice)}"
-                }
+            for ((index, crypt) in priceList.withIndex()) {
+                pricesArrayList.add(
+                    DataPoint(
+                        index.toDouble(),
+                        crypt.priceUsd!!.toDouble()
+                    )
+                )
             }
+            val formate = SimpleDateFormat("HH")
 
-            override fun onFailure(call: Call<CryptData>, t: Throwable) {
-                Toast.makeText(baseContext, "Check the network!", Toast.LENGTH_LONG).show()
+            var l = priceList[0].time?.toLong()!!
+
+            val dateArrayList = arrayListOf<String>()
+            for (i in 0..7) {
+                dateArrayList.add(formate.format(l) + ":00")
+                l += 12340800
             }
+            val series = LineGraphSeries(pricesArrayList.toTypedArray())
+            series.color = Color.BLUE
+            graph.background = Color.LTGRAY.toDrawable()
+            graph.addSeries(series)
+
+            val staticLablesFormatter = StaticLabelsFormatter(graph)
+            staticLablesFormatter.setHorizontalLabels(dateArrayList.toTypedArray())
+
+            graph.gridLabelRenderer.labelFormatter = staticLablesFormatter
+            graph.gridLabelRenderer.textSize = 20F
+            graph.visibility = View.VISIBLE
+
+            val highPrice = series.highestValueY
+            val lowPrice = series.lowestValueY
+            val avgPrice = (highPrice + lowPrice) / 2
+
+            val highPriceView = findViewById<TextView>(R.id.highPriceView)
+            highPriceView.text = "$${String.format("%.4f", highPrice)}"
+
+            val lowPriceView = findViewById<TextView>(R.id.lowPriceView)
+            lowPriceView.text = "$${String.format("%.4f", lowPrice)}"
+
+            val avgPriceView = findViewById<TextView>(R.id.avgPriceView)
+            avgPriceView.text = "$${String.format("%.4f", avgPrice)}"
         })
 
         val dateView = findViewById<TextView>(R.id.dateView)
@@ -111,7 +87,6 @@ class AdditionalInfoActivity : AppCompatActivity() {
         val symbolView = findViewById<ImageView>(R.id.cryptImageView)
 
         nameView.text = Singleton.name
-
         val formatter = SimpleDateFormat("dd-MMMM-YYYY")
         dateView.text = formatter.format(Date(System.currentTimeMillis())).replace("-", " ")
 

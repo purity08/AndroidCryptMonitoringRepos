@@ -9,13 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.example.apiandroidtask.Model
 import com.example.apiandroidtask.R
+import com.example.apiandroidtask.model.RecyclerData
 import com.squareup.picasso.Picasso
 
 class Adapter(
     private val context: Context,
-    private val list: ArrayList<Model>,
+    var list: List<RecyclerData>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<Adapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -39,6 +39,11 @@ class Adapter(
         fun onItemClick(position: Int, v: View?)
     }
 
+    fun setDataList(data: List<RecyclerData>) {
+        list = data
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.crypt_view, parent, false)
         return ViewHolder(view)
@@ -46,10 +51,8 @@ class Adapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = list[position]
-
         val price: String = String.format("%.4f", data.priceUsd?.toFloat())
         val change: String = String.format("%.2f", data.changePercent24Hr?.toFloat())
-
         if (change.startsWith("-")) {
             holder.changePercent24Hr.setTextColor(Color.RED)
             holder.changePercent24Hr.text = "${change}%"

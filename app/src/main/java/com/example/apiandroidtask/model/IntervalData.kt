@@ -1,4 +1,4 @@
-package com.example.apiandroidtask.retrofit.Model
+package com.example.apiandroidtask.model
 
 data class IntervalData(
     var priceUsd: String? = null,
